@@ -1,0 +1,10 @@
+// Quelle est la proba min que l'on soit autorisé à jouer en un temps de 1.
+Pmin=? [ F<=1 "done" ]
+
+// Quelle est la proba max que l'on soit autorisé à jouer en un temps 1.
+Pmax=? [F<=1 "done"]
+
+Pmax=? [F "reset"]
+
+Pmin=? [F "reset"]
+
