@@ -1,8 +1,11 @@
 // Quelle est la proba min que l'on soit autorisé à jouer en un temps de 1.
-Pmin=? [ F<=1 "done" ]
+Pmin=? [ F<=1 "fin_session_de_jeu" ]
 
 // Quelle est la proba max que l'on soit autorisé à jouer en un temps 1.
-Pmax=? [F<=1 "done"]
+Pmax=? [F<=1 "fin_session_de_jeu"]
+
+// Quelle est le temps minimum d'une session de jeu.
+R{"temps_session_de_jeu"}min=? [F "fin_session_de_jeu"]
 
 Pmax=? [F "reset"]
 
