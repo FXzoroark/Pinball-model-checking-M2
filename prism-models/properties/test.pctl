@@ -1,0 +1,9 @@
+const int K;
+
+label "k_tokens" = num_tokens=k;
+
+// From any configuration, a stable configuration is reached with probability 1
+filter(forall, "init"=>P>=1 [ F "fin_session_de_jeu" ])
+
+Pmax=? [ F<=K "fin_session_de_jeu" ]
+

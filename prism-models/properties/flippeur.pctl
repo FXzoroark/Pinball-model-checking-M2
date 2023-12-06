@@ -6,8 +6,3 @@ Pmax=? [F<=1 "fin_session_de_jeu"]
 
 // Quelle est le temps minimum d'une session de jeu.
 R{"temps_session_de_jeu"}min=? [F "fin_session_de_jeu"]
-
-Pmax=? [F "reset"]
-
-Pmin=? [F "reset"]
-
