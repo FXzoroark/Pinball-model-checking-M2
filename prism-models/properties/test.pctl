@@ -7,3 +7,5 @@ filter(forall, "init"=>P>=1 [ F "fin_session_de_jeu" ])
 
 Pmax=? [ F<=K "fin_session_de_jeu" ]
 
+R{"points"}min=? [F<=10 "fin_session_de_jeu"]
+

@@ -1,0 +1,13 @@
+const int T;
+
+// P max que le Tème rebond soit sur un slider
+Pmax=? [F slider U count > T]
+
+// P max que le Tème rebond soit sur un petit bumper
+Pmax=? [F petit_bumper U count > T]
+
+// P max que le Tème rebond soit sur un gros bumper
+Pmax=? [F gros_bumper U count > T]
+
+filter(printall, R{"points"}max=? [ (F s = 6) & count < T ])
+
