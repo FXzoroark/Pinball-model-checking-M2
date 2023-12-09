@@ -359,11 +359,21 @@ module MachineABoules
 endmodule
 
 const int MAX_REBONDS;
+const int MAX_REBONDS_PETIT_AVANT_BONUS;
+
 
 module CompteurRebonds
     count: [0..MAX_REBONDS];
-    
-    [rebond] s>=1 & s<=29 -> (count'=min(count+1, MAX_REBONDS));
+
+    [rebond] s=1 -> (count'=count);
+    [rebond] s>=2 & s<=29 -> (count'=min(count+1, MAX_REBONDS));
+endmodule
+
+module CompteurRebondsBonus
+    count_petits_avant_bonus: [0..MAX_REBONDS_PETIT_AVANT_BONUS];    
+
+    [rebond] petit_bumper -> (count_petits_avant_bonus'=min(count_petits_avant_bonus+1, MAX_REBONDS_PETIT_AVANT_BONUS));
+    [rebond] !petit_bumper | count_petits_avant_bonus>=MAX_REBONDS_PETIT_AVANT_BONUS -> (count_petits_avant_bonus'=0);
 endmodule
 
 formula slider = s >= 2 & s <= 5;
@@ -378,6 +388,7 @@ rewards "points"
     [rebond] slider: 1;
     [rebond] gros_bumper: 2;
     [rebond] petit_bumper: 3;
+    [rebond] count_petits_avant_bonus=MAX_REBONDS_PETIT_AVANT_BONUS: 10;
 endrewards
 
 //global:
