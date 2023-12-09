@@ -9,8 +9,9 @@ module Monnayeur
     // mo=2 wait   => attente du choix du joueur
     // mo=3 done   => le joueur a quitté le flippeur
 
-    [] mo=1 & monnaie < 2 -> (monnaie'=monnaie+1);
-    [] mo=1 & monnaie < 2 -> (monnaie'=monnaie);
+    [] mo=1 & monnaie < 2 ->
+			  1/2: (monnaie'=monnaie+1)
+			+ 1/2: (monnaie'=monnaie);
 
     [lancer_partie] mo=1 & monnaie >= 1 -> (monnaie'=0) & (mo'=0);
 
@@ -360,12 +361,9 @@ endmodule
 const int MAX_REBONDS;
 
 module CompteurRebonds
-    count: [0..MAX_REBONDS+1];
-    // count_petits: [0..MAX_REBONDS+1];
-
-    [rebond] count <= MAX_REBONDS -> (count'=min(count+1, MAX_REBONDS+1));
-    // [rebond] count_petits <= MAX_REBONDS -> (count_petits'=min(count_petits+1, MAX_REBONDS+1));
-    [done] mo=3 -> (count'=MAX_REBONDS+1);
+    count: [0..MAX_REBONDS];
+    
+    [rebond] s>=1 & s<=29 -> (count'=min(count+1, MAX_REBONDS));
 endmodule
 
 formula slider = s >= 2 & s <= 5;
@@ -377,14 +375,9 @@ formula petit_bumper = s >= 6 & s <= 9;
 // machine a boules:
 
 rewards "points"
-    // [] s=2 : 20;
     [rebond] slider: 1;
     [rebond] gros_bumper: 2;
     [rebond] petit_bumper: 3;
-endrewards
-
-rewards "rebonds"
-    [] s >= 2 & s <= 30 : 1;
 endrewards
 
 //global:
