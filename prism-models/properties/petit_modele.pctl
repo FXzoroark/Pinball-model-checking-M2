@@ -9,7 +9,9 @@ Pmax=? [ F petit_bumper U count>T ]
 // P max que le Tème rebond soit sur un gros bumper
 Pmax=? [ F gros_bumper U count>T ]
 
-filter(printall, R{"points"}max=? [ F count>=MAX_REBONDS | "fin_session_de_jeu" ])
+filter(printall, R{"points"}max=? [ F count>=MAX_REBONDS|"fin_session_de_jeu" ])
 
-Pmin=? [ F count>=MAX_REBONDS | "fin_session_de_jeu" ]
+Pmin=? [ F count>=MAX_REBONDS|"fin_session_de_jeu" ]
+
+R{"points"}>=50 [ F count>=MAX_REBONDS ]
 

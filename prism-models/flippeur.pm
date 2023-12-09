@@ -20,7 +20,7 @@ module Monnayeur
     [] mo=2 -> (mo'=3);
 endmodule
 
-const int MAX_BILLES = 3;
+const int MAX_BILLES;
 
 module MachineABoules
     ma: [0..2] init 0;
@@ -28,7 +28,7 @@ module MachineABoules
     // ma=1 active => une bille est en jeu
     // ma=2 lost   => une bille est perdue
 
-    nb_billes: [0..3];
+    nb_billes: [0..MAX_BILLES];
     s: [0..30];
 
     [lancer_partie] ma=0 -> (nb_billes'=MAX_BILLES) & (ma'=1) & (s'=1);
@@ -355,11 +355,11 @@ module MachineABoules
     [rebond] ma=1 & s=29 -> (s'=30);
 
     // Perdu
-    [] ma=1 & s=30 & nb_billes >= 1 -> (nb_billes'=nb_billes-1) & (ma'=2);
+    [] ma=1 & s=30 & nb_billes >= 1 -> (nb_billes'=nb_billes-1);
 endmodule
 
 const int MAX_REBONDS;
-const int MAX_REBONDS_PETIT_AVANT_BONUS;
+const int MAX_REBONDS_AVANT_BONUS;
 
 
 module CompteurRebonds
@@ -370,10 +370,10 @@ module CompteurRebonds
 endmodule
 
 module CompteurRebondsBonus
-    count_petits_avant_bonus: [0..MAX_REBONDS_PETIT_AVANT_BONUS];    
+    count_avant_bonus: [0..MAX_REBONDS_AVANT_BONUS];    
 
-    [rebond] petit_bumper -> (count_petits_avant_bonus'=min(count_petits_avant_bonus+1, MAX_REBONDS_PETIT_AVANT_BONUS));
-    [rebond] !petit_bumper | count_petits_avant_bonus>=MAX_REBONDS_PETIT_AVANT_BONUS -> (count_petits_avant_bonus'=0);
+    [rebond] slider & count_avant_bonus<MAX_REBONDS_AVANT_BONUS -> (count_avant_bonus'=min(count_avant_bonus+1, MAX_REBONDS_AVANT_BONUS));
+    [rebond] !slider | count_avant_bonus>=MAX_REBONDS_AVANT_BONUS -> (count_avant_bonus'=0);
 endmodule
 
 formula slider = s >= 2 & s <= 5;
@@ -385,10 +385,10 @@ formula petit_bumper = s >= 6 & s <= 9;
 // machine a boules:
 
 rewards "points"
-    [rebond] slider: 1;
-    [rebond] gros_bumper: 2;
-    [rebond] petit_bumper: 3;
-    [rebond] count_petits_avant_bonus=MAX_REBONDS_PETIT_AVANT_BONUS: 10;
+    [rebond] slider: 1 * ((MAX_BILLES-nb_billes)+1);
+    [rebond] gros_bumper: 2 * ((MAX_BILLES-nb_billes)+1);
+    [rebond] petit_bumper: 3 * ((MAX_BILLES-nb_billes)+1);
+    [rebond] count_avant_bonus=MAX_REBONDS_AVANT_BONUS: 10 * ((MAX_BILLES-nb_billes)+1);
 endrewards
 
 //global:
