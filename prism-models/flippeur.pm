@@ -1,7 +1,10 @@
 // modélisation du Flippeur ou machine a boules en québécois
 
+const int MAX_ANTI_ADDICTION_COUNT = 3;
+
 module Monnayeur
     monnaie: [0..2];
+    anti_addiction_count: [0..MAX_ANTI_ADDICTION_COUNT];
 
     mo: [0..3] init 1;
     // mo=0 idle   => flippeur en cours d'utilisation
@@ -15,9 +18,9 @@ module Monnayeur
 
     [lancer_partie] mo=1 & monnaie >= 1 -> (monnaie'=0) & (mo'=0);
 
-    [partie_fini] mo=0 -> (mo'=2);
-    [] mo=2 -> (mo'=1);
-    [] mo=2 -> (mo'=3);
+    [partie_fini] mo=0 -> (mo'=2) & (anti_addiction_count'=min(anti_addiction_count+1,MAX_ANTI_ADDICTION_COUNT));
+    [] mo=2 & anti_addiction_count<MAX_ANTI_ADDICTION_COUNT -> (mo'=1);
+    [] mo=2 & anti_addiction_count>= MAX_ANTI_ADDICTION_COUNT-> (mo'=3);
 endmodule
 
 const int MAX_BILLES;
@@ -355,7 +358,8 @@ module MachineABoules
     [rebond] ma=1 & s=29 -> (s'=30);
 
     // Perdu
-    [] ma=1 & s=30 & nb_billes >= 1 -> (nb_billes'=nb_billes-1);
+    [] ma=1 & s=30 & nb_billes >= 1 -> (nb_billes'=nb_billes-1) & (ma'=2);
+
 endmodule
 
 const int MAX_REBONDS;
@@ -385,10 +389,10 @@ formula petit_bumper = s >= 6 & s <= 9;
 // machine a boules:
 
 rewards "points"
-    [rebond] slider: 1 * ((MAX_BILLES-nb_billes)+1);
-    [rebond] gros_bumper: 2 * ((MAX_BILLES-nb_billes)+1);
-    [rebond] petit_bumper: 3 * ((MAX_BILLES-nb_billes)+1);
-    [rebond] count_avant_bonus=MAX_REBONDS_AVANT_BONUS: 10 * ((MAX_BILLES-nb_billes)+1);
+    [rebond] slider: 1;
+    [rebond] gros_bumper: pow(max(MAX_BILLES - nb_billes, 1),2);
+    [rebond] petit_bumper: 3;
+    [rebond] count_avant_bonus=MAX_REBONDS_AVANT_BONUS: 3 * MAX_BILLES ;
 endrewards
 
 //global:
@@ -398,6 +402,8 @@ rewards "nb_partie_lance"
 endrewards
 
 
+
 // LABELS
+label "bonus" = count_avant_bonus = MAX_REBONDS_AVANT_BONUS;
 label "fin_session_de_jeu" = mo=3;
 label "partie_commencee" = mo=1;

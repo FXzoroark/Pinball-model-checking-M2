@@ -1,17 +1,24 @@
 const int T;
+const int PO;
 
-// P max que le Tème rebond soit sur un slider
-Pmax=? [ F slider U count>T ]
+// P max que le MAX_REBONDS ème rebond soit sur un slider
+Pmax=? [ F slider U count>=MAX_REBONDS ]
 
-// P max que le Tème rebond soit sur un petit bumper
-Pmax=? [ F petit_bumper U count>T ]
+// P max que le MAX_REBONDS ème rebond soit sur un petit bumper
+Pmax=? [ F petit_bumper U count>=MAX_REBONDS ]
 
-// P max que le Tème rebond soit sur un gros bumper
-Pmax=? [ F gros_bumper U count>T ]
+// P max que le MAX_REBONDS ème rebond soit sur un gros bumper
+Pmax=? [ F gros_bumper U count>=MAX_REBONDS ]
 
+// Score maximum atteignable un jour en MAX_REBONDS ou quand la session de jeu est fini
 filter(printall, R{"points"}max=? [ F count>=MAX_REBONDS|"fin_session_de_jeu" ])
 
-Pmin=? [ F count>=MAX_REBONDS|"fin_session_de_jeu" ]
+// P min d'atteindre MAX_REBONDS rebonds avant que la fin de la session de jeu
+Pmin=? [ !"fin_session_de_jeu" U count>=MAX_REBONDS]
 
-R{"points"}>=50 [ F count>=MAX_REBONDS ]
+// Vérifier qu'il est possible d'atteindre  PO points de score en MAX_REBONDS nombre de rebond.
+R{"points"}>=PO [ F count>=MAX_REBONDS|"fin_session_de_jeu" ]
+
+// Vérifie qu'il est possible qu'un jour la session de jeu soit fini
+Pmin=? [F "fin_session_de_jeu"]
 
